@@ -1,0 +1,59 @@
+---
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: doris-fe
+  labels:
+    app: doris-fe
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doris-fe
+  template:
+    metadata:
+      labels:
+        app: doris-fe
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: doris-fe
+          env:
+          - name: FE_IPADDRESS
+            valueFrom:
+              fieldRef:
+                fieldPath: status.podIP
+          image: registry.erda.cloud/erda-addons/apache-doris-fe:v0.15-fdp-20211215_test
+          command: [ "/bin/bash", "-ce", "/opt/fe/bin/start_fe.sh --daemon;tail -f /dev/null" ]
+          volumeMounts:
+          - mountPath: /opt/fe/doris-meta
+            name: volume-fe
+          livenessProbe:
+            httpGet:
+              path: /api/bootstrap
+              port: 8030
+            initialDelaySeconds: 300
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3      
+          ports:
+            - containerPort: 8030
+              protocol: TCP
+            - containerPort: 9020
+              protocol: TCP
+            - containerPort: 9030
+              protocol: TCP
+            - containerPort: 9010
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 2
+              memory: 4G
+            requests:
+              cpu: 200m
+              memory: 1G
+      volumes:
+      - name: volume-fe
+        persistentVolumeClaim:
+          claimName: pvc-doris-fe

@@ -1,0 +1,60 @@
+kind: Deployment
+apiVersion: apps/v1
+metadata:
+  name: doris-be
+  labels:
+    app: doris-be
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: doris-be
+  template:
+    metadata:
+      labels:
+        app: doris-be
+    spec:
+      hostNetwork: true
+      dnsPolicy: ClusterFirstWithHostNet
+      containers:
+        - name: doris-be
+          env:
+            - name: BE_IPADDRESS
+              valueFrom:
+                 fieldRef:
+                   fieldPath: status.podIP
+          image: registry.erda.cloud/erda-addons/apache-doris-be:v0.15-fdp-20211215_test
+          command: [ "/bin/bash", "-ce", "/opt/be/bin/start_be.sh --daemon;tail -f /dev/null" ]
+          livenessProbe:
+            httpGet:
+              path: /api/health
+              port: 8040
+            initialDelaySeconds: 300
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3            
+          ports:
+            - containerPort: 9060
+              protocol: TCP
+            - containerPort: 9070
+              protocol: TCP
+            - containerPort: 8040
+              protocol: TCP
+            - containerPort: 9050
+              protocol: TCP
+            - containerPort: 8060
+              protocol: TCP
+          resources:
+            limits:
+              cpu: 2
+              memory: 2G
+            requests:
+              cpu: 200m
+              memory: 1G
+          volumeMounts:
+            - mountPath: /opt/be/storage
+              name: volume-be
+      volumes:
+      - name: volume-be
+        persistentVolumeClaim:
+          claimName: pvc-doris-be

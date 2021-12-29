@@ -1,0 +1,45 @@
+#pv
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: volume-doris-fe-node-010000000233
+spec:
+  storageClassName: volume-doris-fe
+  capacity:
+    storage: 10Gi
+  accessModes:
+    - ReadWriteOnce
+  local:
+    path: "/data/doris-fe"
+  nodeAffinity:
+    required:
+      nodeSelectorTerms:
+      - matchExpressions:
+        - key: kubernetes.io/hostname
+          operator: In
+          values:
+          - node-010000000233
+  persistentVolumeReclaimPolicy: Recycle
+  volumeMode: Filesystem
+---
+#sc
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
+metadata:
+  name: volume-doris-fe
+provisioner: kubernetes.io/no-provisioner
+reclaimPolicy: Retain
+---
+#pvc
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pvc-doris-fe
+spec:
+  accessModes:
+  - ReadWriteOnce
+  resources:
+    requests:
+      storage: 10Gi
+  storageClassName: volume-doris-fe
+  volumeMode: Filesystem
