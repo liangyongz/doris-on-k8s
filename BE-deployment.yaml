@@ -23,7 +23,7 @@ spec:
               valueFrom:
                  fieldRef:
                    fieldPath: status.podIP
-          image: registry.erda.cloud/erda-addons/apache-doris-be:v0.15-fdp-20211215_test
+          image: 359261016/apache-doris-be:v0.15
           command: [ "/bin/bash", "-ce", "/opt/be/bin/start_be.sh --daemon;tail -f /dev/null" ]
           livenessProbe:
             httpGet:
