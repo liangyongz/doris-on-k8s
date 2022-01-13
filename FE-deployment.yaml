@@ -24,7 +24,7 @@ spec:
             valueFrom:
               fieldRef:
                 fieldPath: status.podIP
-          image: registry.erda.cloud/erda-addons/apache-doris-fe:v0.15-fdp-20211215_test
+          image: 359261016/apache-doris-fe:v0.15
           command: [ "/bin/bash", "-ce", "/opt/fe/bin/start_fe.sh --daemon;tail -f /dev/null" ]
           volumeMounts:
           - mountPath: /opt/fe/doris-meta
