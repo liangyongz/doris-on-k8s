@@ -33,6 +33,14 @@
   FE-pv.yaml：创建BE需使用的存储，包括pv、sc、pvc。
 
   FE-deployment.yaml：BE部署脚本
+ 
+## 镜像说明
+
+* docker pull 359261016/apache-doris-be:v0.15
+* docker pull 359261016/apache-doris-fe:v0.15
+
+也可自己参照官方文档构建镜像
+http://doris.incubator.apache.org/zh-CN/installing/compilation.html#%E4%BD%BF%E7%94%A8-docker-%E5%BC%80%E5%8F%91%E9%95%9C%E5%83%8F%E7%BC%96%E8%AF%91-%E6%8E%A8%E8%8D%90
 
 # 部署步骤
 
