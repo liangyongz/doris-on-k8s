@@ -68,8 +68,6 @@ kubectl apply -f BE-pv.yaml
 kubectl apply -f BE-deployment.yaml
 ```
 
-![image](https://user-images.githubusercontent.com/18653564/149274248-94fe0b27-216a-43e9-891f-d9af134b0288.png)
-
 
 ## 2. 添加BE到FE
 
